@@ -6,14 +6,15 @@ var __importDefault =
     }
 Object.defineProperty(exports, '__esModule', { value: true })
 const ramda_1 = __importDefault(require('ramda'))
-const config_1 = __importDefault(require('config'))
+const dotenv_1 = __importDefault(require('dotenv'))
 const chalk_1 = __importDefault(require('chalk'))
 const winston_1 = __importDefault(require('winston'))
 let logger
 function singletonInstance(options) {
     if (ramda_1.default.isNil(logger)) {
         if (ramda_1.default.isNil(options)) {
-            options = config_1.default.get('logger')
+            dotenv_1.default.config()
+            options = { service: process.env.LOGGER_SERVICE || 'logger' }
         }
         const { service } = options
         logger = winston_1.default.createLogger({

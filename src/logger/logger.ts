@@ -1,5 +1,5 @@
 import R from 'ramda'
-import config from 'config'
+import dotenv from 'dotenv'
 import chalk from 'chalk'
 import winston from 'winston'
 import { ILoggerConfig } from 'logger'
@@ -9,7 +9,9 @@ let logger: winston.Logger | null
 function singletonInstance(options?: ILoggerConfig | null): winston.Logger {
     if (R.isNil(logger)) {
         if (R.isNil(options)) {
-            options = config.get('logger') as ILoggerConfig
+            dotenv.config()
+
+            options = { service: process.env.LOGGER_SERVICE || 'logger' }
         }
 
         const { service } = options
