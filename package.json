@@ -1,0 +1,30 @@
+{
+  "name": "logger",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "typings/logger.d.ts",
+  "scripts": {
+    "start": "ts-node dist/index.js",
+    "dev": "ts-node src/test.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sam Hsieh <shenglung0619@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/config": "^3.3.3",
+    "@types/node": "^20.11.8",
+    "@types/ramda": "^0.29.10",
+    "prettier": "^3.2.4",
+    "reflect-metadata": "^0.2.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "config": "^3.3.10",
+    "dotenv": "^16.4.1",
+    "ramda": "^0.29.1",
+    "ts-node": "^10.9.2",
+    "winston": "^3.11.0"
+  }
+}
