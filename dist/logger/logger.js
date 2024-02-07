@@ -14,20 +14,32 @@ function singletonInstance(options) {
     if (ramda_1.default.isNil(logger)) {
         if (ramda_1.default.isNil(options)) {
             dotenv_1.default.config()
-            options = { service: process.env.LOGGER_SERVICE || 'logger' }
+            options = {
+                service: process.env.LOGGER_SERVICE || 'logger',
+                format: process.env.LOGGER_FORMAT || 'json'
+            }
         }
-        const { service } = options
-        logger = winston_1.default.createLogger({
-            level: 'info',
-            format: winston_1.default.format.combine(
+        const { service, format: _format } = options
+        let format
+        if (_format === 'json') {
+            format = winston_1.default.format.combine(
                 winston_1.default.format.timestamp(),
+                winston_1.default.format.errors({ stack: true }),
+                winston_1.default.format.json()
+            )
+        } else {
+            format = winston_1.default.format.combine(
+                winston_1.default.format.timestamp(),
+                winston_1.default.format.errors({ stack: true }),
                 winston_1.default.format.printf((info) => {
                     const { timestamp, level, message } = info
                     return `${chalk_1.default.gray(timestamp)} ${level === 'error' ? chalk_1.default.red(level) : level === 'warn' ? chalk_1.default.yellow(level) : chalk_1.default.green(level)} ${message}`
-                }),
-                winston_1.default.format.errors({ stack: true }),
-                winston_1.default.format.json()
-            ),
+                })
+            )
+        }
+        logger = winston_1.default.createLogger({
+            level: 'info',
+            format,
             defaultMeta: { service },
             transports: [new winston_1.default.transports.Console()]
         })

@@ -11,8 +11,10 @@ declare module 'logger' {
 
     export interface ILoggerConfig {
         service: string
+        format: FormatType
     }
 
+    export type FormatType = 'json' | 'text'
     // export interface LeveledLogMethod {
     //     (message: string, callback: LogCallback): ILogger
     //     (message: string, meta: any, callback: LogCallback): ILogger

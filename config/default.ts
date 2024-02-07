@@ -1,5 +1,6 @@
 export default {
     logger: {
-        service: 'loggerService'
+        service: 'loggerService',
+        format: 'json' // "json", "text" for local development
     }
 }

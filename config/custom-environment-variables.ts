@@ -5,6 +5,7 @@ export default {
         debug: { __name: 'APP_DEBUG', __format: 'boolean' }
     },
     logger: {
-        service: 'LOGGER_SERVICE'
+        service: 'LOGGER_SERVICE',
+        format: 'LOGGER_FORMAT'
     }
 }
