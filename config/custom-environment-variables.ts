@@ -6,6 +6,7 @@ export default {
     },
     logger: {
         service: 'LOGGER_SERVICE',
-        format: 'LOGGER_FORMAT'
+        format: 'LOGGER_FORMAT',
+        colorize: { __name: 'LOGGER_COLORIZE', __format: 'boolean' }
     }
 }

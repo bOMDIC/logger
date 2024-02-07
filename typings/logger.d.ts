@@ -12,6 +12,7 @@ declare module 'logger' {
     export interface ILoggerConfig {
         service: string
         format: FormatType
+        colorize: boolean
     }
 
     export type FormatType = 'json' | 'text'
