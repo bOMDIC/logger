@@ -38,7 +38,7 @@ function createCustomCombine(format: FormatType, colorize: boolean) {
     if (format === 'json') {
         if (colorize) {
             return winston.format.combine(
-                winston.format.errors({ stack: true }),
+                // winston.format.errors({ stack: true }),
                 winston.format.timestamp(),
                 winston.format.json(),
                 winston.format.printf(getJsonStringByError),
@@ -47,7 +47,7 @@ function createCustomCombine(format: FormatType, colorize: boolean) {
         }
 
         return winston.format.combine(
-            winston.format.errors({ stack: true }),
+            // winston.format.errors({ stack: true }),
             winston.format.timestamp(),
             winston.format.json(),
             winston.format.printf(getJsonStringByError)
@@ -78,54 +78,49 @@ function createCustomCombine(format: FormatType, colorize: boolean) {
     )
 }
 
-function formatErrorToObject(message: any) {
-    if (R.is(Object, message)) {
+function formatErrorToObject(value: any) {
+    const errorToObject = (e: Error) => ({
+        message: e.message,
+        stack: R.pipe(R.defaultTo(''), R.split('\n'), R.slice(0, 4), R.map(R.trim))(e.stack)
+    })
+
+    if (value instanceof Error) {
+        value = errorToObject(value)
+    } else if (R.is(Object, value)) {
         R.forEach((el) => {
-            if (R.is(String, el) && message[el] instanceof Error) {
-                message[el] = {
-                    message: message[el].message,
-                    stack: R.pipe(R.split('\n'), R.slice(0, 4), R.map(R.trim))(message[el].stack)
-                }
+            if (R.is(String, el) && value[el] instanceof Error) {
+                value[el] = errorToObject(value[el])
             }
-        })(R.keys(message))
+        })(R.keys(value))
     }
 
-    return message
-    // return JSON.stringify(info)
-    // return info
+    return value
 }
 
 function getJsonStringByError(info: any) {
-    info.message = formatErrorToObject(info.message)
+    if (info.message) {
+        info.message = formatErrorToObject(info.message)
+    }
+
+    info = formatErrorToObject(info)
 
     return JSON.stringify(info)
 }
 
 function p(info: any) {
-    if (info instanceof Error) {
-        info = {
-            ...info,
-            message: info.message,
-            stack: R.pipe(R.split('\n'), R.slice(0, 4), R.map(R.trim))(info.stack as string)
-        }
+    if (info.message) {
+        info.message = formatErrorToObject(info.message)
     }
+
+    info = formatErrorToObject(info)
 
     const { service, level, message, timestamp } = info
 
-    const meta = R.omit(['service', 'level', 'message', 'timestamp', 'error'])(info)
+    const meta = R.omit(['service', 'level', 'message', 'timestamp'])(info)
 
     const payload = meta ? ` ${JSON.stringify(meta)}` : ''
 
-    // console.log('meta: ', meta)
-    // let _message
-    // if (message instanceof Error) {
-    //     _message = {
-    //         message: message.message,
-    //         stack: R.pipe(R.split('\n'), R.slice(0, 4), R.map(R.trim))(message.stack)
-    //     }
-    // } else {
     let _message = formatErrorToObject(message)
-    // }
 
     if (R.is(Object, _message)) {
         _message = JSON.stringify(_message)
