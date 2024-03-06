@@ -81,7 +81,8 @@ function createCustomCombine(format: FormatType, colorize: boolean) {
 function formatErrorToObject(value: any) {
     const errorToObject = (e: Error) => ({
         message: e.message,
-        stack: R.pipe(R.defaultTo(''), R.split('\n'), R.slice(0, 4), R.map(R.trim))(e.stack)
+        name: e.name,
+        stack: R.pipe(R.defaultTo(''), R.split('\n'), R.slice(0, 6), R.map(R.trim))(e.stack)
     })
 
     if (value instanceof Error) {

@@ -62,10 +62,11 @@ function createCustomCombine(format, colorize) {
 function formatErrorToObject(value) {
     const errorToObject = (e) => ({
         message: e.message,
+        name: e.name,
         stack: ramda_1.default.pipe(
             ramda_1.default.defaultTo(''),
             ramda_1.default.split('\n'),
-            ramda_1.default.slice(0, 4),
+            ramda_1.default.slice(0, 6),
             ramda_1.default.map(ramda_1.default.trim)
         )(e.stack)
     })
